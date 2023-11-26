@@ -1,0 +1,17 @@
+float:
+  any:
+    - base_args: ["@metric", "@dimension"]
+      constructor: ZillizCloud
+      disabled: false
+      docker_tag: ann-benchmarks-zilliz_cloud
+      module: ann_benchmarks.algorithms.zilliz_cloud
+      name: zilliz_cloud
+      run_groups:
+        AUTOINDEX:
+          args:
+            uri: ""
+            user: ""
+            password: ""
+            skip_insert: false # skip creating collection, inserting data and building indexes
+            detailed_batch_logs: false # show more info during concurrency testing
+          query_args: [[1, 8, 32, 64, 128]] # concurrencies for batch mode; nothing would happen in single-query mode;
