@@ -29,6 +29,7 @@ class ZillizCloud(BaseANN):
         password = configs.get("password", "")
         self.db_config = dict(uri=uri, user=user, password=password)
         self.skip_insert = configs.get("skip_insert", False)
+        self.skip_custom_batch_test = configs.get("skip_custom_batch_test", False)
         self.detailed_batch_logs = configs.get("detailed_batch_logs", True)
         self._connect()
 
@@ -160,10 +161,16 @@ class ZillizCloud(BaseANN):
                             print("Sync all processes. [done]")
 
                     start = time.perf_counter()
-                    all_count = sum([r.result()[0] for r in future_iter])
+                    count_list = [r.result()[0] for r in future_iter]
                     cost = time.perf_counter() - start
+                    duration_list = [r.result()[1] for r in future_iter]
+
+                    all_count = sum(count_list)
+                    all_latency = sum(duration_list) / all_count
                     qps = round(all_count / cost, 4)
-                    print(f"[Custom Multiprocesses (Spawn)] all_count: {all_count}, cost: {cost:.3f}s, qps: {qps:.3f}")
+                    print(
+                        f"[Custom Multiprocesses (Spawn)] all_count: {all_count}, cost: {cost:.3f}s, qps: {qps:.3f}, latency: {all_latency*1000:.3f}ms"
+                    )
         except BaseException as e:
             print(f"multiprocess error: {e}")
 
@@ -194,10 +201,12 @@ def custom_search_subtask(
         idx = idx + 1 if idx < num - 1 else 0
 
     total_dur = round(time.perf_counter() - start_time, 4)
+    qps = count / total_dur
+    latency_avg = total_dur / count
     if client.detailed_batch_logs:
         print(
             f"{mp.current_process().name:16} search {duration}s: "
-            f"actual_dur={total_dur}s, count={count}, qps in this process: {round(count / total_dur, 4):3}"
+            f"actual_dur={total_dur}s, count={count}, qps in this process: {qps:.3f}, latency_avg: {latency_avg * 1000:.3f}ms"
         )
 
-    return (count, total_dur)
+    return (count, total_dur, latency_avg)

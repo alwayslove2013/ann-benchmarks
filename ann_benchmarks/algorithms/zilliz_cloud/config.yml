@@ -13,5 +13,6 @@ float:
             user: ""
             password: ""
             skip_insert: false # skip creating collection, inserting data and building indexes
+            skip_custom_batch_test: false # skip custom batch method
             detailed_batch_logs: false # show more info during concurrency testing
-          query_args: [[1, 8, 32, 64, 128]] # concurrencies for batch mode; nothing would happen in single-query mode;
+          query_args: [[1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]] # concurrencies for batch mode; nothing would happen in single-query mode;

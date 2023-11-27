@@ -110,7 +110,8 @@ def run_individual_query(algo: BaseANN, X_train: numpy.array, X_test: numpy.arra
                 for v, single_results in zip(X, results)
             ]
             print(f"[Defaul ThreadPool] qps: {len(X) / total:.3f}")
-            algo.custom_batch_query(X_test, count)
+            if not algo.skip_custom_batch_test:
+                algo.custom_batch_query(X_test, count)
             return [(latency, v) for latency, v in zip(batch_latencies, candidates)]
 
         if batch:
