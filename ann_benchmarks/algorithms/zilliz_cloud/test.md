@@ -25,6 +25,7 @@ sudo python install.py --algorithm zilliz_cloud
 - dataset
     - sift-128-euclidean
     - gist-960-euclidean
+    - openai500k-1536-angular
 - local
     - not run in docker
 - batch
@@ -38,4 +39,8 @@ sudo python3 run.py --algorithm zilliz_cloud --dataset sift-128-euclidean --batc
 
 # test gist
 sudo python3 run.py --algorithm zilliz_cloud --dataset gist-960-euclidean --batch --runs 1
+
+# test openai
+sudo bash prepare_openai.sh
+sudo python3 run.py --algorithm zilliz_cloud --dataset openai500k-1536-angular --batch --runs 1
 ```
