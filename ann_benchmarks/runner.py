@@ -109,6 +109,7 @@ def run_individual_query(algo: BaseANN, X_train: numpy.array, X_test: numpy.arra
                 [(int(idx), float(metrics[distance].distance(v, X_train[idx]))) for idx in single_results]  # noqa
                 for v, single_results in zip(X, results)
             ]
+            print(f"qps: {len(X) / total:.3f}")
             return [(latency, v) for latency, v in zip(batch_latencies, candidates)]
 
         if batch:
